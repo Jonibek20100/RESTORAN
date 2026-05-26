@@ -1,0 +1,773 @@
+/* GLOBAL STYLES */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8fafc; /* Kontent qismlari uchun rasmdagi toza och fon */
+  color: #0f172a;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.max-with{
+  width: 100%;
+  height: 100vh;
+}
+
+.nav-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 16px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.logo-circle {
+  width: 36px;
+  height: 36px;
+  background: #E12515;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  color: white;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #E12515;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 0;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-btn:hover, .nav-btn.active {
+  color: #E12515;
+}
+
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #E12515;
+  border-radius: 2px;
+}
+
+/* HERO SECTION (1-RASM) */
+.hero-card {
+  position: relative;
+  height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 700px;
+}
+
+.hero-title {
+  font-size: 72px;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 16px 0;
+}
+
+.hero-subtitle {
+  font-size: 22px;
+  color: #f1f5f9;
+  font-weight: 400;
+  margin: 0 0 32px 0;
+}
+
+
+.booking-section {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 850px;
+  margin: auto;
+  text-align: center;
+}
+
+.booking-title {
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.booking-subtitle {
+  color: #64748b;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.tab-container {
+  display: inline-flex;
+  background: #e2e8f0;
+  padding: 4px;
+  border-radius: 30px;
+  margin-bottom: 32px;
+}
+
+.tab-btn {
+  border: none;
+  background: transparent;
+  padding: 8px 32px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.cetr{
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px;
+  text-align: left;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.input-label {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  box-sizing: border-box;
+  background: #f1f5f9;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: #cbd5e1;
+}
+
+.form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* 3-RASM: BIZNING MENYU */
+.menu-section {
+  max-w: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.categories-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+  overflow-x: auto;
+}
+
+.cat-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cat-btn.active {
+  background: #E12515;
+  color: white;
+  border-color: #E12515;
+}
+
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 30px;
+}
+
+.food-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border: 1px solid #f1f5f9;
+}
+
+.img-container {
+  position: relative;
+  height: 220px;
+}
+
+.food-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ff5a00;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+.food-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.food-desc {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+  height: 42px;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.food-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ff5a00;
+}
+
+/* RED VE WHITE BUTTONS */
+.btn-red {
+  background: #E12515;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-white {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 4-RASM: SIDEBAR SAVATCHA (MODAL DRAWER) */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 200;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cart-sidebar {
+  width: 420px;
+  background: white;
+  height: 100%;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.cart-header {
+  padding: 24px;
+  border-b: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.cart-items-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.cart-sidebar-item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cart-item-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.qty-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.qty-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cart-footer-panel {
+  padding: 24px;
+  border-top: 1px solid #f1f5f9;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.02);
+}
+
+/* TOAST XABARNOMASI (5-RASM) */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  background: white;
+  border-radius: 10px;
+  padding: 14px 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 300;
+  border: 1px solid #e2e8f0;
+}
+
+.toast-success-icon {
+  width: 20px;
+  height: 20px;
+  background: black;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+/* Xizmatlarimiz Bo'limi */
+.services-section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.services-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.services-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  margin-bottom: 40px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.service-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #f1f5f9;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.service-img-wrapper {
+  height: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Rasmdagi gradientli ranglar fon sifatida */
+.delivery-bg {
+  background: linear-gradient(135deg, rgba(0, 119, 182, 0.8), rgba(0, 180, 216, 0.6)), url('https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=600') center/cover;
+}
+
+.booking-bg {
+  background: linear-gradient(135deg, rgba(114, 9, 183, 0.8), rgba(181, 23, 158, 0.6)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600') center/cover;
+}
+
+.menu-bg {
+  background: linear-gradient(135deg, rgba(232, 93, 4, 0.8), rgba(244, 140, 6, 0.6)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600') center/cover;
+}
+
+.service-icon-circle {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.service-card-body {
+  padding: 24px;
+}
+
+.service-card-body h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 10px 0;
+}
+
+.service-card-body p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.service-link-btn {
+  background: none;
+  border: none;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.service-link-btn:hover {
+  color: #ff5a00;
+}
+
+/* Qizil Buyurtma Banneri (CTA) */
+.cta-banner {
+  background: linear-gradient(90deg, #ff3c00 0%, #e11d48 100%);
+  padding: 50px 20px;
+  text-align: center;
+  margin-top: 40px;
+  width: 97.3%;
+}
+
+.cta-banner-content {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-title {
+  color: #ffffff;
+  font-size: 38px;
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+}
+
+.cta-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 0 28px 0;
+}
+
+.cta-btn-white {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border: none;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.cta-btn-white:hover {
+  background-color: #ffffff;
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Kichik ekranlar uchun moslashuvchanlik */
+@media (max-width: 768px) {
+  .cta-title {
+    font-size: 28px;
+  }
+  .cta-subtitle {
+    font-size: 14px;
+  }
+}
+@media (max-width: 768px) {
+.nav-header {
+  width: 100%;
+}
+
+}
+/* Yetkazib berish Sahifasi Styllari */
+.delivery-section-page {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.delivery-main-title {
+  font-size: 42px;
+  font-weight: 800;
+  text-align: center;
+  margin: 0 0 8px 0;
+  color: #0f172a;
+}
+
+.delivery-main-subtitle {
+  color: #64748b;
+  text-align: center;
+  margin: 0 0 40px 0;
+  font-size: 15px;
+}
+
+/* Info Grid Tizimi */
+.delivery-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.delivery-info-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.delivery-info-card h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.delivery-info-card p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Ikonka uchun doira background */
+.delivery-icon-orange-circle {
+  width: 44px;
+  height: 44px;
+  background-color: #fff7ed;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Kichik ekranlar (Mobil) uchun moslashtirish */
+@media (max-width: 768px) {
+  .delivery-info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .delivery-main-title {
+    font-size: 32px;
+  }
+}
+/* Kompyuter ekranlari uchun (Odatiy holatda burger yashirin bo'ladi) */
+.burger-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 110;
+}
+
+
+@media (max-width: 768px) {
+  .burger-menu-btn {
+    display: block; 
+  }
+
+  .nav-header {
+    width: 80%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    flex-direction: column;
+    padding: 15px;
+    gap: 10px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #e2e8f0;
+    display: none; /* Odatiy yopiq holat */
+    z-index: 100;
+  }
+
+  /* .show klassi qo'shilganda menyu ochiladi */
+  .nav-links.show {
+    display: flex;
+  }
+
+  /* Tugmalarni to'liq enli qilish */
+  .nav-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    border-radius: 6px;
+  }
+}
