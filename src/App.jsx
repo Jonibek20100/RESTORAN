@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-// Menu ikonkasini ham importlar qatoriga qo'shdik
+// AOS kutubxonasini js qismini ham import qilamiz
+import AOS from 'aos';
+import 'aos/dist/aos.css'; 
 import { ShoppingCart, X, Plus, Minus, ArrowRight, Bike, Calendar, UtensilsCrossed, Clock, MapPin, Phone, Menu } from 'lucide-react';
 
 const MENU_DATA = [
@@ -15,11 +17,12 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('Hammasi');
   const [toastMessage, setToastMessage] = useState('');
-  
-  // Burger menyuning ochiq/yopiq holati uchun state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOrdering, setIsOrdering] = useState(false);
+  
+  // Joy band qilish ichidagi ichki tab uchun state ('table' yoki 'food')
+  const [bookingTab, setBookingTab] = useState('table');
 
-  // Joy band qilish formasi uchun state
   const [bookingForm, setBookingForm] = useState({
     name: '',
     phone: '',
@@ -28,7 +31,19 @@ export default function App() {
     guests: ''
   });
 
-  // Savatga qo'shish va Toastni yoqish
+  // Sayt yuklanganda AOS-ni ishga tushirish (Tepadan tushish effekti uchun)
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animatsiya davomiyligi (1 soniya)
+      once: true,     // Animatsiya faqat bir marta (sahifa yuklanganda) ishlaydi
+    });
+  }, []);
+
+  // Har safar sahifa o'zgarganda yoki ichki tab o'zgarganda AOS animatsiyalarini yangilash
+  useEffect(() => {
+    AOS.refresh();
+  }, [currentPage, activeCategory, bookingTab]);
+
   const addToCart = (item) => {
     setCart(prev => {
       const exists = prev.find(i => i.id === item.id);
@@ -40,7 +55,6 @@ export default function App() {
     setTimeout(() => setToastMessage(''), 3000);
   };
 
-  // Joy band qilish funksiyasi
   const handleBookingSubmit = (e) => {
     e.preventDefault();
     if (!bookingForm.name || !bookingForm.phone || !bookingForm.date || !bookingForm.time || !bookingForm.guests) {
@@ -67,11 +81,11 @@ export default function App() {
   const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
 
-  // Navigatsiya tugmasi bosilganda sahifani o'zgartirish va menyuni yopish xizmati
   const handleNavClick = (page) => {
     setCurrentPage(page);
     setActiveCategory('Hammasi');
-    setIsMenuOpen(false); // Mobil menyuni avtomatik yopadi
+    setBookingTab('table'); // Boshqa sahifaga o'tib qaytganda har doim stol formasidan boshlansin
+    setIsMenuOpen(false);
   };
 
   return (
@@ -85,8 +99,7 @@ export default function App() {
       )}
 
       {/* NAVIGATION NAVBAR */}
-      <header className="nav-header">
-        {/* Burger Tugmasi (Faqat mobilda ko'rinadi) */}
+      <header className="nav-header" data-aos="fade-down">
         <button className="burger-menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? <X size={24} color="#0f172a" /> : <Menu size={24} color="#0f172a" />}
         </button>
@@ -96,7 +109,6 @@ export default function App() {
           <span className="logo-text">Restoran</span>
         </div>
         
-        {/* IsMenuOpen holatiga qarab 'show' klassi qo'shiladi */}
         <nav className={`nav-links ${isMenuOpen ? 'show' : ''}`}>
           <button onClick={() => handleNavClick('home')} className={`nav-btn ${currentPage === 'home' ? 'active' : ''}`}>Bosh sahifa</button>
           <button onClick={() => handleNavClick('delivery')} className={`nav-btn ${currentPage === 'delivery' ? 'active' : ''}`}>Yetkazib berish</button>
@@ -116,10 +128,9 @@ export default function App() {
 
       {/* DYNAMIC CONTENT AREA */}
       <main>
-        {/* BOSH SAHIFA */}
         {currentPage === 'home' && (
           <>
-            <div className="hero-card">
+            <div className="hero-card" data-aos="fade-down" data-aos-delay="100">
               <div className="hero-bg" />
               <div className="hero-overlay" />
               <div className="hero-content">
@@ -133,11 +144,17 @@ export default function App() {
 
             {/* XIZMATLARIMIZ BO'LIMI */}
             <section className="services-section">
-              <h2 className="services-title">Xizmatlarimiz</h2>
-              <p className="services-subtitle">Sizga qulay bo'lgan xizmatni tanlang</p>
+              <h2 className="services-title" data-aos="fade-down" data-aos-delay="200">Xizmatlarimiz</h2>
+              <p className="services-subtitle" data-aos="fade-down" data-aos-delay="250">Sizga qulay bo'lgan xizmatni tanlang</p>
 
               <div className="services-grid">
-                <div className="service-card">
+                <div 
+                  className="service-card" 
+                  onClick={() => handleNavClick('delivery')}
+                  style={{ cursor: 'pointer' }}
+                  data-aos="fade-down"
+                  data-aos-delay="300"
+                >
                   <div className="service-img-wrapper delivery-bg">
                     <div className="service-icon-circle">
                       <Bike size={24} color="#ff5a00" />
@@ -146,13 +163,19 @@ export default function App() {
                   <div className="service-card-body">
                     <h3>Yetkazib berish</h3>
                     <p>Tez va ishonchli yetkazib berish xizmati</p>
-                    <button onClick={() => setCurrentPage('delivery')} className="service-link-btn">
+                    <div className="service-link-btn">
                       Batafsil <ArrowRight size={16} />
-                    </button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="service-card">
+                <div 
+                  className="service-card" 
+                  onClick={() => handleNavClick('booking')}
+                  style={{ cursor: 'pointer' }}
+                  data-aos="fade-down"
+                  data-aos-delay="400"
+                >
                   <div className="service-img-wrapper booking-bg">
                     <div className="service-icon-circle">
                       <Calendar size={24} color="#ff5a00" />
@@ -161,13 +184,19 @@ export default function App() {
                   <div className="service-card-body">
                     <h3>Joy band qilish</h3>
                     <p>Stol band qilish va ovqat buyurtma qilish</p>
-                    <button onClick={() => setCurrentPage('booking')} className="service-link-btn">
+                    <div className="service-link-btn">
                       Batafsil <ArrowRight size={16} />
-                    </button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="service-card">
+                <div 
+                  className="service-card" 
+                  onClick={() => handleNavClick('menu')}
+                  style={{ cursor: 'pointer' }}
+                  data-aos="fade-down"
+                  data-aos-delay="500"
+                >
                   <div className="service-img-wrapper menu-bg">
                     <div className="service-icon-circle">
                       <UtensilsCrossed size={24} color="#ff5a00" />
@@ -176,16 +205,15 @@ export default function App() {
                   <div className="service-card-body">
                     <h3>Ovqat buyurtirish</h3>
                     <p>Menyudan tanlang va buyurtma bering</p>
-                    <button onClick={() => setCurrentPage('menu')} className="service-link-btn">
+                    <div className="service-link-btn">
                       Batafsil <ArrowRight size={16} />
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* QIZIL BUYURTMA BANNERI */}
-            <section className="cta-banner">
+            <section className="cta-banner" data-aos="fade-down" data-aos-delay="200">
               <div className="cta-banner-content">
                 <h2 className="cta-title">Buyurtmangizni hoziroq bering!</h2>
                 <p className="cta-subtitle">Tez va sifatli xizmat, eng yangi taomlar</p>
@@ -197,137 +225,136 @@ export default function App() {
           </>
         )}
 
-        {/* JOY BAND QILISH */}
+        {/* JOY BAND QILISH SAHIFA */}
         {currentPage === 'booking' && (
           <div className="booking-section">
-            <h2 className="booking-title">Joy band qilish</h2>
-            <p className="booking-subtitle">Stolni band qiling va ovqat buyurtma qiling</p>
+            <h2 className="booking-title" data-aos="fade-down">Joy band qilish</h2>
+            <p className="booking-subtitle" data-aos="fade-down" data-aos-delay="100">Stolni band qiling va ovqat buyurtma qiling</p>
             
-            <div className="tab-container">
-              <button className="tab-btn active">Stol bandi</button>
-              <button className="tab-btn" onClick={() => setCurrentPage('menu')}>Ovqat tanlash</button>
+            {/* O'zgartirilgan Tab Tizimi */}
+            <div className="tab-container" data-aos="fade-down" data-aos-delay="150">
+              <button 
+                className={`tab-btn ${bookingTab === 'table' ? 'active' : ''}`} 
+                onClick={() => setBookingTab('table')}
+              >
+                Stol bandi
+              </button>
+              <button 
+                className={`tab-btn ${bookingTab === 'food' ? 'active' : ''}`} 
+                onClick={() => setBookingTab('food')}
+              >
+                Ovqat tanlash
+              </button>
             </div>
 
-           <div className="cetr">
-             <form className="form-card" onSubmit={handleBookingSubmit}>
-              <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700' }}>Stol bandi ma'lumotlari</h3>
-              <div className="form-grid">
-                <div>
-                  <label className="input-label">Ismingiz</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ismingizni kiriting" 
-                    className="input-field"
-                    value={bookingForm.name}
-                    onChange={(e) => setBookingForm({...bookingForm, name: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">Telefon</label>
-                  <input 
-                    type="text" 
-                    placeholder="+998 90 123 45 67" 
-                    className="input-field"
-                    value={bookingForm.phone}
-                    onChange={(e) => setBookingForm({...bookingForm, phone: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">Sana</label>
-                  <input 
-                    type="date" 
-                    className="input-field"
-                    value={bookingForm.date}
-                    onChange={(e) => setBookingForm({...bookingForm, date: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">Vaqt</label>
-                  <select 
-                    className="input-field"
-                    value={bookingForm.time}
-                    onChange={(e) => setBookingForm({...bookingForm, time: e.target.value})}
-                  >
-                    <option value="">Vaqtni tanlang</option>
-                    <option value="18:00">18:00</option>
-                    <option value="19:00">19:00</option>
-                    <option value="20:00">20:00</option>
-                  </select>
-                </div>
-                <div className="full-width">
-                  <label className="input-label">Mehmonlar soni</label>
-                  <input 
-                    type="number" 
-                    placeholder="Mehmonlar soni" 
-                    className="input-field"
-                    value={bookingForm.guests}
-                    onChange={(e) => setBookingForm({...bookingForm, guests: e.target.value})}
-                  />
-                </div>
+            {/* IF - 1: STOL BANDI FORMASI */}
+            {bookingTab === 'table' && (
+              <div className="cetr" data-aos="fade-up" data-aos-delay="200">
+                <form className="form-card" onSubmit={handleBookingSubmit}>
+                  <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700' }}>Stol bandi ma'lumotlari</h3>
+                  <div className="form-grid">
+                    <div>
+                      <label className="input-label">Ismingiz</label>
+                      <input type="text" placeholder="Ismingizni kiriting" className="input-field" value={bookingForm.name} onChange={(e) => setBookingForm({...bookingForm, name: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="input-label">Telefon</label>
+                      <input type="text" placeholder="+998 90 123 45 67" className="input-field" value={bookingForm.phone} onChange={(e) => setBookingForm({...bookingForm, phone: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="input-label">Sana</label>
+                      <input type="date" className="input-field" value={bookingForm.date} onChange={(e) => setBookingForm({...bookingForm, date: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="input-label">Vaqt</label>
+                      <select className="input-field" value={bookingForm.time} onChange={(e) => setBookingForm({...bookingForm, time: e.target.value})}>
+                        <option value="">Vaqtni tanlang</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                      </select>
+                    </div>
+                    <div className="full-width">
+                      <label className="input-label">Mehmonlar soni</label>
+                      <input type="number" placeholder="Mehmonlar soni" className="input-field" value={bookingForm.guests} onChange={(e) => setBookingForm({...bookingForm, guests: e.target.value})} />
+                    </div>
+                  </div>
+                  <div className="form-actions">
+                    <button type="button" className="btn-white" onClick={() => setBookingTab('food')}>Ovqat qo'shish</button>
+                    <button type="submit" className="btn-red">Band qilish</button>
+                  </div>
+                </form>
               </div>
+            )}
 
-              <div className="form-actions">
-                <button type="button" className="btn-white" onClick={() => setCurrentPage('menu')}>Ovqat qo'shish</button>
-                <button type="submit" className="btn-red">Band qilish</button>
+            {/* IF - 2: OVQAT TANLASH RO'YXATI (Rasmda so'ralgan bo'lim) */}
+            {bookingTab === 'food' && (
+              <div className="booking-food-content" data-aos="fade-up" data-aos-delay="200">
+                <div className="categories-container">
+                  {['Hammasi', 'Burgerlar', 'Pizza', 'Sushi', 'Pasta', 'Salatlar', 'Go\'sht', 'Desertlar'].map(cat => (
+                    <button 
+                      key={cat} 
+                      onClick={() => setActiveCategory(cat)} 
+                      className={`cat-btn ${activeCategory === cat ? 'active' : ''}`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="food-grid" style={{ marginTop: '30px' }}>
+                  {MENU_DATA.filter(item => activeCategory === 'Hammasi' || item.category === activeCategory).map((item, index) => (
+                    <div key={item.id} className="food-card" data-aos="fade-up" data-aos-delay={50 * (index + 1)}>
+                      <div className="img-container">
+                        <img src={item.img} alt={item.name} className="food-img" />
+                        <span className="badge-tag">{item.category}</span>
+                      </div>
+                      <div className="card-body">
+                        <h4 className="food-name">{item.name}</h4>
+                        <p className="food-desc">{item.desc}</p>
+                        <div className="card-footer">
+                          <span className="food-price">{item.price.toLocaleString()} so'm</span>
+                          <button onClick={() => addToCart(item)} className="btn-red" style={{ padding: '8px 16px', fontSize: '13px' }}>+ Qo'shish</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </form>
-           </div>
+            )}
           </div>
         )}
 
         {/* YETKAZIB BERISH SAHIFA */}
         {currentPage === 'delivery' && (
           <div className="delivery-section-page">
-            <h2 className="delivery-main-title">Yetkazib berish</h2>
-            <p className="delivery-main-subtitle">Buyurtmangizni uyingizga yetkazib beramiz</p>
+            <h2 className="delivery-main-title" data-aos="fade-down">Yetkazib berish</h2>
+            <p className="delivery-main-subtitle" data-aos="fade-down" data-aos-delay="100">Buyurtmangizni uyingizga yetkazib beramiz</p>
 
             <div className="delivery-info-grid">
-              <div className="delivery-info-card">
-                <div className="delivery-icon-orange-circle">
-                  <Clock size={20} color="#ff5a00" />
-                </div>
-                <div>
-                  <h4>Yetkazib berish vaqti</h4>
-                  <p>30-45 daqiqa</p>
-                </div>
+              <div className="delivery-info-card" data-aos="fade-down" data-aos-delay="150">
+                <div className="delivery-icon-orange-circle"><Clock size={20} color="#ff5a00" /></div>
+                <div><h4>Yetkazib berish vaqti</h4><p>30-45 daqiqa</p></div>
               </div>
-
-              <div className="delivery-info-card">
-                <div className="delivery-icon-orange-circle">
-                  <MapPin size={20} color="#ff5a00" />
-                </div>
-                <div>
-                  <h4>Yetkazib berish</h4>
-                  <p>15,000 so'm</p>
-                </div>
+              <div className="delivery-info-card" data-aos="fade-down" data-aos-delay="200">
+                <div className="delivery-icon-orange-circle"><MapPin size={20} color="#ff5a00" /></div>
+                <div><h4>Yetkazib berish</h4><p>15,000 so'm</p></div>
               </div>
-
-              <div className="delivery-info-card">
-                <div className="delivery-icon-orange-circle">
-                  <Phone size={20} color="#ff5a00" />
-                </div>
-                <div>
-                  <h4>Aloqa</h4>
-                  <p>+998 90 123 45 67</p>
-                </div>
+              <div className="delivery-info-card" data-aos="fade-down" data-aos-delay="250">
+                <div className="delivery-icon-orange-circle"><Phone size={20} color="#ff5a00" /></div>
+                <div><h4>Aloqa</h4><p>+998 90 123 45 67</p></div>
               </div>
             </div>
 
-            <div className="categories-container" style={{ marginTop: '40px' }}>
+            <div className="categories-container" style={{ marginTop: '40px' }} data-aos="fade-down" data-aos-delay="300">
               {['Hammasi', 'Burgerlar', 'Pizza', 'Sushi', 'Pasta', 'Salatlar', 'Go\'sht', 'Desertlar'].map(cat => (
-                <button 
-                  key={cat} 
-                  onClick={() => setActiveCategory(cat)} 
-                  className={`cat-btn ${activeCategory === cat ? 'active' : ''}`}
-                >
-                  {cat}
-                </button>
+                <button key={cat} onClick={() => setActiveCategory(cat)} className={`cat-btn ${activeCategory === cat ? 'active' : ''}`}>{cat}</button>
               ))}
             </div>
 
             <div className="food-grid">
-              {MENU_DATA.filter(item => activeCategory === 'Hammasi' || item.category === activeCategory).map(item => (
-                <div key={item.id} className="food-card">
+              {MENU_DATA.filter(item => activeCategory === 'Hammasi' || item.category === activeCategory).map((item, index) => (
+                <div key={item.id} className="food-card" data-aos="fade-down" data-aos-delay={100 * (index + 1)}>
                   <div className="img-container">
                     <img src={item.img} alt={item.name} className="food-img" />
                     <span className="badge-tag">{item.category}</span>
@@ -337,9 +364,7 @@ export default function App() {
                     <p className="food-desc">{item.desc}</p>
                     <div className="card-footer">
                       <span className="food-price">{item.price.toLocaleString()} so'm</span>
-                      <button onClick={() => addToCart(item)} className="btn-red" style={{ padding: '8px 16px', fontSize: '13px' }}>
-                        + Qo'shish
-                      </button>
+                      <button onClick={() => addToCart(item)} className="btn-red" style={{ padding: '8px 16px', fontSize: '13px' }}>+ Qo'shish</button>
                     </div>
                   </div>
                 </div>
@@ -351,24 +376,18 @@ export default function App() {
         {/* BIZNING MENYU */}
         {currentPage === 'menu' && (
           <div className="menu-section">
-            <h2 style={{ fontSize: '42px', fontWeight: '800', textAlign: 'center', margin: '0 0 8px 0' }}>Bizning menyu</h2>
-            <p style={{ color: '#64748b', textAlign: 'center', margin: '0 0 32px 0' }}>Eng yoqimli taomlarni tanlang</p>
+            <h2 style={{ fontSize: '42px', fontWeight: '800', textAlign: 'center', margin: '0 0 8px 0' }} data-aos="fade-down">Bizning menyu</h2>
+            <p style={{ color: '#64748b', textAlign: 'center', margin: '0 0 32px 0' }} data-aos="fade-down" data-aos-delay="100">Eng yoqimli taomlarni tanlang</p>
 
-            <div className="categories-container">
+            <div className="categories-container" data-aos="fade-down" data-aos-delay="150">
               {['Hammasi', 'Burgerlar', 'Pizza', 'Sushi', 'Pasta', 'Salatlar', 'Go\'sht', 'Desertlar'].map(cat => (
-                <button 
-                  key={cat} 
-                  onClick={() => setActiveCategory(cat)} 
-                  className={`cat-btn ${activeCategory === cat ? 'active' : ''}`}
-                >
-                  {cat}
-                </button>
+                <button key={cat} onClick={() => setActiveCategory(cat)} className={`cat-btn ${activeCategory === cat ? 'active' : ''}`}>{cat}</button>
               ))}
             </div>
 
             <div className="food-grid">
-              {MENU_DATA.filter(item => activeCategory === 'Hammasi' || item.category === activeCategory).map(item => (
-                <div key={item.id} className="food-card">
+              {MENU_DATA.filter(item => activeCategory === 'Hammasi' || item.category === activeCategory).map((item, index) => (
+                <div key={item.id} className="food-card" data-aos="fade-down" data-aos-delay={100 * (index + 1)}>
                   <div className="img-container">
                     <img src={item.img} alt={item.name} className="food-img" />
                     <span className="badge-tag">{item.category}</span>
@@ -378,9 +397,7 @@ export default function App() {
                     <p className="food-desc">{item.desc}</p>
                     <div className="card-footer">
                       <span className="food-price">{item.price.toLocaleString()} so'm</span>
-                      <button onClick={() => addToCart(item)} className="btn-red" style={{ padding: '8px 16px', fontSize: '13px' }}>
-                        + Qo'shish
-                      </button>
+                      <button onClick={() => addToCart(item)} className="btn-red" style={{ padding: '8px 16px', fontSize: '13px' }}>+ Qo'shish</button>
                     </div>
                   </div>
                 </div>
@@ -391,46 +408,83 @@ export default function App() {
       </main>
 
       {/* MODAL SAVATCHA */}
-      {isCartOpen && (
-        <div className="cart-overlay" onClick={() => setIsCartOpen(false)}>
-          <div className="cart-sidebar" onClick={(e) => e.stopPropagation()}>
-            <div className="cart-header">
-              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Savatingiz</h3>
-              <button className="close-btn" onClick={() => setIsCartOpen(false)}><X size={24} /></button>
-            </div>
-
-            <div className="cart-items-scroll">
-              {cart.length === 0 ? (
-                <p style={{ color: '#64748b', textAlign: 'center', marginTop: '40px' }}>Savat bo'sh</p>
-              ) : (
-                cart.map(i => (
-                  <div key={i.id} className="cart-sidebar-item">
-                    <img src={i.img} alt={i.name} className="cart-item-img" />
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700' }}>{i.name}</h4>
-                      <span style={{ color: '#ff5a00', fontSize: '13px', fontWeight: '700' }}>{i.price.toLocaleString()} so'm</span>
-                    </div>
-                    <div className="qty-box">
-                      <button onClick={() => updateQty(i.id, -1)} className="qty-action"><Minus size={12} /></button>
-                      <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{i.qty}</span>
-                      <button onClick={() => addToCart(i)} className="qty-action"><Plus size={12} /></button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="cart-footer-panel">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <span style={{ fontSize: '16px', fontWeight: '700' }}>Jami:</span>
-                <span style={{ fontSize: '24px', fontWeight: '800', color: '#ff5a00' }}>{totalAmount.toLocaleString()} so'm</span>
-              </div>
-              <button className="btn-red" style={{ width: '100%', padding: '14px', marginBottom: '10px' }}>Buyurtmani rasmiylashtirish</button>
-              <button className="btn-white" onClick={clearCart} style={{ width: '100%', padding: '12px', color: '#0f172a' }}>Savatni tozalash</button>
-            </div>
+     {isCartOpen && (
+  <div className="cart-overlay" onClick={() => { setIsCartOpen(false); setIsOrdering(false); }}>
+    <div className="cart-sidebar" onClick={(e) => e.stopPropagation()}>
+      
+      {/* 1-HOLAT: BUYURTMA TAYYORLANMOQDA XABARI */}
+      {isOrdering ? (
+        <div className="order-status-container" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '20px' }}>
+          <div className="loading-icon-wrapper" style={{ marginBottom: '20px' }}>
+             {/* Animatsiya uchun Bike yoki Clock ishlatishingiz mumkin */}
+             <Bike size={48} color="#ff5a00" className="animate-bounce" /> 
           </div>
+          <h3 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '10px' }}>Buyurtma tayyorlanmoqda!</h3>
+          <p style={{ color: '#64748b', lineHeight: '1.5' }}>
+            Operatorimiz tez orada siz bilan bog'lanadi. <br /> Xarid uchun rahmat!
+          </p>
+          <button 
+            className="btn-red" 
+            style={{ marginTop: '30px', width: '100%' }}
+            onClick={() => { setIsCartOpen(false); setIsOrdering(false); clearCart(); }}
+          >
+            Yopish
+          </button>
         </div>
+      ) : (
+        /* 2-HOLAT: STANDART SAVATCHA KO'RINISHI */
+        <>
+          <div className="cart-header">
+            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Savatingiz</h3>
+            <button className="close-btn" onClick={() => setIsCartOpen(false)}><X size={24} /></button>
+          </div>
+          
+          <div className="cart-items-scroll">
+            {cart.length === 0 ? (
+              <p style={{ color: '#64748b', textAlign: 'center', marginTop: '40px' }}>Savat bo'sh</p>
+            ) : (
+              cart.map(i => (
+                <div key={i.id} className="cart-sidebar-item">
+                  <img src={i.img} alt={i.name} className="cart-item-img" />
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700' }}>{i.name}</h4>
+                    <span style={{ color: '#ff5a00', fontSize: '13px', fontWeight: '700' }}>{i.price.toLocaleString()} so'm</span>
+                  </div>
+                  <div className="qty-box">
+                    <button onClick={() => updateQty(i.id, -1)} className="qty-action"><Minus size={12} /></button>
+                    <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{i.qty}</span>
+                    <button onClick={() => addToCart(i)} className="qty-action"><Plus size={12} /></button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="cart-footer-panel">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <span style={{ fontSize: '16px', fontWeight: '700' }}>Jami:</span>
+              <span style={{ fontSize: '24px', fontWeight: '800', color: '#ff5a00' }}>{totalAmount.toLocaleString()} so'm</span>
+            </div>
+            
+            {/* TUGMA BOSILGANDA isOrdering TRUE BO'LADI */}
+            <button 
+              className="btn-red" 
+              style={{ width: '100%', padding: '14px', marginBottom: '10px' }}
+              onClick={() => cart.length > 0 && setIsOrdering(true)}
+              disabled={cart.length === 0}
+            >
+              Buyurtmani rasmiylashtirish
+            </button>
+            
+            <button className="btn-white" onClick={clearCart} style={{ width: '100%', padding: '12px', color: '#0f172a' }}>
+              Savatni tozalash
+            </button>
+          </div>
+        </>
       )}
+    </div>
+  </div>
+)}
     </div>
   );
 }
