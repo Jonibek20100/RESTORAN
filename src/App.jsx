@@ -3,7 +3,11 @@ import './App.css';
 // AOS kutubxonasini js qismini ham import qilamiz
 import AOS from 'aos';
 import 'aos/dist/aos.css'; 
-import { ShoppingCart, X, Plus, Minus, ArrowRight, Bike, Calendar, UtensilsCrossed, Clock, MapPin, Phone, Menu } from 'lucide-react';
+// Eskisini shunga almashtiring:
+import { 
+  ShoppingCart, X, Plus, Minus, ArrowRight, Bike, 
+  Calendar, UtensilsCrossed, Clock, MapPin, Phone, Menu, Trash2 
+} from 'lucide-react';
 
 const MENU_DATA = [
   { id: 1, name: 'Classic Burger', category: 'Burgerlar', price: 45000, desc: 'Shirin bulka, go\'sht, pomidor, salat va maxsus sous', img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=600' },
@@ -18,8 +22,10 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState('Hammasi');
   const [toastMessage, setToastMessage] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isOrdering, setIsOrdering] = useState(false);
-  
+
+  const removeFromCart = (id) => {
+  setCart(prev => prev.filter(item => item.id !== id));
+};
   // Joy band qilish ichidagi ichki tab uchun state ('table' yoki 'food')
   const [bookingTab, setBookingTab] = useState('table');
 
@@ -136,9 +142,20 @@ export default function App() {
               <div className="hero-content">
                 <h1 className="hero-title">Xush kelibsiz!</h1>
                 <p className="hero-subtitle">Eng mazali va sifatli taomlarni tanlang</p>
-                <button onClick={() => setCurrentPage('menu')} className="btn-red" style={{ padding: '14px 28px' }}>
-                  Aniqroq ko'rish <ArrowRight size={16} />
-                </button>
+             <button 
+  onClick={() => setCurrentPage('menu')} 
+  className="btn-red btn-with-arrow" 
+  style={{ 
+    padding: '14px 28px', 
+    display: 'inline-flex', // 'flex' emas, 'inline-flex' qiling
+    alignItems: 'center', 
+    justifyContent: 'center',
+    gap: '8px',
+    margin: '0 auto' // Markazda turishini ta'minlash uchun
+  }}
+>
+  Aniqroq ko'rish <ArrowRight size={16} className="arrow-icon" />
+</button>
               </div>
             </div>
 
@@ -407,81 +424,61 @@ export default function App() {
         )}
       </main>
 
-      {/* MODAL SAVATCHA */}
-     {isCartOpen && (
-  <div className="cart-overlay" onClick={() => { setIsCartOpen(false); setIsOrdering(false); }}>
+     {/* MODAL SAVATCHA */}
+{isCartOpen && (
+  <div className="cart-overlay" onClick={() => setIsCartOpen(false)}>
     <div className="cart-sidebar" onClick={(e) => e.stopPropagation()}>
-      
-      {/* 1-HOLAT: BUYURTMA TAYYORLANMOQDA XABARI */}
-      {isOrdering ? (
-        <div className="order-status-container" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '20px' }}>
-          <div className="loading-icon-wrapper" style={{ marginBottom: '20px' }}>
-             {/* Animatsiya uchun Bike yoki Clock ishlatishingiz mumkin */}
-             <Bike size={48} color="#ff5a00" className="animate-bounce" /> 
-          </div>
-          <h3 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '10px' }}>Buyurtma tayyorlanmoqda!</h3>
-          <p style={{ color: '#64748b', lineHeight: '1.5' }}>
-            Operatorimiz tez orada siz bilan bog'lanadi. <br /> Xarid uchun rahmat!
-          </p>
-          <button 
-            className="btn-red" 
-            style={{ marginTop: '30px', width: '100%' }}
-            onClick={() => { setIsCartOpen(false); setIsOrdering(false); clearCart(); }}
-          >
-            Yopish
-          </button>
-        </div>
-      ) : (
-        /* 2-HOLAT: STANDART SAVATCHA KO'RINISHI */
-        <>
-          <div className="cart-header">
-            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Savatingiz</h3>
-            <button className="close-btn" onClick={() => setIsCartOpen(false)}><X size={24} /></button>
-          </div>
-          
-          <div className="cart-items-scroll">
-            {cart.length === 0 ? (
-              <p style={{ color: '#64748b', textAlign: 'center', marginTop: '40px' }}>Savat bo'sh</p>
-            ) : (
-              cart.map(i => (
-                <div key={i.id} className="cart-sidebar-item">
-                  <img src={i.img} alt={i.name} className="cart-item-img" />
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700' }}>{i.name}</h4>
-                    <span style={{ color: '#ff5a00', fontSize: '13px', fontWeight: '700' }}>{i.price.toLocaleString()} so'm</span>
-                  </div>
-                  <div className="qty-box">
-                    <button onClick={() => updateQty(i.id, -1)} className="qty-action"><Minus size={12} /></button>
-                    <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{i.qty}</span>
-                    <button onClick={() => addToCart(i)} className="qty-action"><Plus size={12} /></button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+      <div className="cart-header">
+        <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Savatingiz</h3>
+        <button className="close-btn" onClick={() => setIsCartOpen(false)}><X size={24} /></button>
+      </div>
 
-          <div className="cart-footer-panel">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <span style={{ fontSize: '16px', fontWeight: '700' }}>Jami:</span>
-              <span style={{ fontSize: '24px', fontWeight: '800', color: '#ff5a00' }}>{totalAmount.toLocaleString()} so'm</span>
+      <div className="cart-items-scroll">
+        {cart.length === 0 ? (
+          <p style={{ color: '#64748b', textAlign: 'center', marginTop: '40px' }}>Savat bo'sh</p>
+        ) : (
+          cart.map(i => (
+            <div key={i.id} className="cart-sidebar-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
+              <img src={i.img} alt={i.name} className="cart-item-img" style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+              
+              <div style={{ flex: 1 }}>
+                <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700' }}>{i.name}</h4>
+                <span style={{ color: '#ff5a00', fontSize: '13px', fontWeight: '700' }}>{i.price.toLocaleString()} so'm</span>
+              </div>
+
+              {/* O'NG TOMON: O'CHIRISH VA MIQDOR */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                <button 
+                  onClick={() => removeFromCart(i.id)} 
+                  style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
+                  title="O'chirish"
+                >
+                  <Trash2 size={18} />
+                </button>
+
+                <div className="qty-box" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '4px 8px', borderRadius: '6px' }}>
+                  <button onClick={() => updateQty(i.id, -1)} className="qty-action"><Minus size={12} /></button>
+                  <span style={{ fontSize: '13px', fontWeight: 'bold', minWidth: '15px', textAlign: 'center' }}>{i.qty}</span>
+                  <button onClick={() => addToCart(i)} className="qty-action"><Plus size={12} /></button>
+                </div>
+              </div>
             </div>
-            
-            {/* TUGMA BOSILGANDA isOrdering TRUE BO'LADI */}
-            <button 
-              className="btn-red" 
-              style={{ width: '100%', padding: '14px', marginBottom: '10px' }}
-              onClick={() => cart.length > 0 && setIsOrdering(true)}
-              disabled={cart.length === 0}
-            >
-              Buyurtmani rasmiylashtirish
-            </button>
-            
-            <button className="btn-white" onClick={clearCart} style={{ width: '100%', padding: '12px', color: '#0f172a' }}>
-              Savatni tozalash
-            </button>
-          </div>
-        </>
-      )}
+          ))
+        )}
+      </div>
+
+      <div className="cart-footer-panel">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <span style={{ fontSize: '16px', fontWeight: '700' }}>Jami:</span>
+          <span style={{ fontSize: '24px', fontWeight: '800', color: '#ff5a00' }}>{totalAmount.toLocaleString()} so'm</span>
+        </div>
+        <button className="btn-red" style={{ width: '100%', padding: '14px', marginBottom: '10px' }}>
+          Buyurtmani rasmiylashtirish
+        </button>
+        <button className="btn-white" onClick={clearCart} style={{ width: '100%', padding: '12px', color: '#0f172a' }}>
+          Savatni tozalash
+        </button>
+      </div>
     </div>
   </div>
 )}
