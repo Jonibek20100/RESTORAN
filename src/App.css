@@ -9,6 +9,7 @@ body {
 }
 
 
+
 .max-with{
   width: 100%;
   height: 100vh;
@@ -337,7 +338,7 @@ body {
 .btn-red {
   background: #E12515;
   color: white;
-  border: none;
+  border: 2px solid #E12515; /* Oldindan border berib qo'yamiz, lekin rangi fon bilan bir xil */
   border-radius: 10px;
   padding: 12px 24px;
   font-weight: bold;
@@ -346,50 +347,47 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  transition: 0.2s;
-}
-.btn-red:hover {
-  border: 1px solid #ff0000; /* Endi ishlaydi */
-  background: none;
-  color: white;
-  /* border: none;  <-- Buni o'chirib tashladik */
-  border-radius: 10px;
-  padding: 12px 24px;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  gap: 6px; 
+  transition: 0.3s; /* Bir oz yumshoqroq o'tish */
 }
 
+.btn-red:hover {
+  background: transparent; /* Fon yo'qoladi */
+  color: #ffffff; /* Matn rangi qizil bo'ladi, shunda ko'rinadi */
+  border: 2px solid #E12515; /* Border rangi qoladi */
+}
+.kilo{
+  transition: 0.2s;
+}
+.kilo:hover{
+ color: rgb(0, 0, 0);
+}
+.kilo1{
+  transition: 0.2s;
+}
+.kilo1:hover{
+ color: rgb(255, 255, 255);
+}
 .btn-white {
   background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
+  color: #000000;
+  border: 2px solid #E12515; 
   border-radius: 10px;
   padding: 12px 24px;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.btn-white:hover {
-    background: #E12515;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 24px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 14px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  transition: 0.2s;
+  gap: 6px; 
+  transition: all 0.3s ease-in-out; /* Hamma xususiyatlar uchun */
+}
+
+.btn-white:hover {
+  background: #dd2312; 
+  color: #ffffff !important; 
+  box-shadow: 0 4px 12px rgba(225, 37, 21, 0.3); /* Chiroyli soya */
 }
 
 /* 4-RASM: SIDEBAR SAVATCHA (MODAL DRAWER) */
@@ -786,7 +784,7 @@ body {
     font-size: 32px;
   }
 }
-/* Kompyuter ekranlari uchun (Odatiy holatda burger yashirin bo'ladi) */
+
 .burger-menu-btn {
   display: none;
   background: none;
