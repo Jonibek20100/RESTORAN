@@ -166,7 +166,7 @@ export default function App() {
 
               <div className="services-grid">
                 <div 
-                  className="service-card" 
+                  className="x" 
                   onClick={() => handleNavClick('delivery')}
                   style={{ cursor: 'pointer' }}
                   data-aos="fade-down"
@@ -425,63 +425,63 @@ export default function App() {
       </main>
 
      {/* MODAL SAVATCHA */}
-{isCartOpen && (
-  <div className="cart-overlay" onClick={() => setIsCartOpen(false)}>
-    <div className="cart-sidebar" onClick={(e) => e.stopPropagation()}>
-      <div className="cart-header">
-        <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Savatingiz</h3>
-        <button className="close-btn" onClick={() => setIsCartOpen(false)}><X size={24} /></button>
-      </div>
+  {isCartOpen && (
+    <div className="cart-overlay" onClick={() => setIsCartOpen(false)}>
+      <div className="cart-sidebar" onClick={(e) => e.stopPropagation()}>
+        <div className="cart-header">
+          <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Savatingiz</h3>
+          <button className="close-btn" onClick={() => setIsCartOpen(false)}><X size={24} /></button>
+        </div>
 
-      <div className="cart-items-scroll">
-        {cart.length === 0 ? (
-          <p style={{ color: '#64748b', textAlign: 'center', marginTop: '40px' }}>Savat bo'sh</p>
-        ) : (
-          cart.map(i => (
-            <div key={i.id} className="cart-sidebar-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
-              <img src={i.img} alt={i.name} className="cart-item-img" style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
-              
-              <div style={{ flex: 1 }}>
-                <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700' }}>{i.name}</h4>
-                <span style={{ color: '#ff5a00', fontSize: '13px', fontWeight: '700' }}>{i.price.toLocaleString()} so'm</span>
-              </div>
+        <div className="cart-items-scroll">
+          {cart.length === 0 ? (
+            <p style={{ color: '#64748b', textAlign: 'center', marginTop: '40px' }}>Savat bo'sh</p>
+          ) : (
+            cart.map(i => (
+              <div key={i.id} className="cart-sidebar-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
+                <img src={i.img} alt={i.name} className="cart-item-img" style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+                
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700' }}>{i.name}</h4>
+                  <span style={{ color: '#ff5a00', fontSize: '13px', fontWeight: '700' }}>{i.price.toLocaleString()} so'm</span>
+                </div>
 
-              {/* O'NG TOMON: O'CHIRISH VA MIQDOR */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                <button 
-                  onClick={() => removeFromCart(i.id)} 
-                  style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
-                  title="O'chirish"
-                >
-                  <Trash2 size={18} />
-                </button>
+                {/* O'NG TOMON: O'CHIRISH VA MIQDOR */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                  <button 
+                    onClick={() => removeFromCart(i.id)} 
+                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
+                    title="O'chirish"
+                  >
+                    <Trash2 size={18} />
+                  </button>
 
-                <div className="qty-box" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '4px 8px', borderRadius: '6px' }}>
-                  <button onClick={() => updateQty(i.id, -1)} className="qty-action"><Minus size={12} /></button>
-                  <span style={{ fontSize: '13px', fontWeight: 'bold', minWidth: '15px', textAlign: 'center' }}>{i.qty}</span>
-                  <button onClick={() => addToCart(i)} className="qty-action"><Plus size={12} /></button>
+                  <div className="qty-box" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '4px 8px', borderRadius: '6px' }}>
+                    <button onClick={() => updateQty(i.id, -1)} className="qty-action"><Minus size={12} /></button>
+                    <span style={{ fontSize: '13px', fontWeight: 'bold', minWidth: '15px', textAlign: 'center' }}>{i.qty}</span>
+                    <button onClick={() => addToCart(i)} className="qty-action"><Plus size={12} /></button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        )}
-      </div>
-
-      <div className="cart-footer-panel">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <span style={{ fontSize: '16px', fontWeight: '700' }}>Jami:</span>
-          <span style={{ fontSize: '24px', fontWeight: '800', color: '#ff5a00' }}>{totalAmount.toLocaleString()} so'm</span>
+            ))
+          )}
         </div>
-        <button className="btn-red" style={{ width: '100%', padding: '14px', marginBottom: '10px' }}>
-          Buyurtmani rasmiylashtirish
-        </button>
-        <button className="btn-white" onClick={clearCart} style={{ width: '100%', padding: '12px', color: '#0f172a' }}>
-          Savatni tozalash
-        </button>
+
+        <div className="cart-footer-panel">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <span style={{ fontSize: '16px', fontWeight: '700' }}>Jami:</span>
+            <span style={{ fontSize: '24px', fontWeight: '800', color: '#ff5a00' }}>{totalAmount.toLocaleString()} so'm</span>
+          </div>
+          <button className="btn-red" style={{ width: '100%', padding: '14px', marginBottom: '10px' }}>
+            Buyurtmani rasmiylashtirish
+          </button>
+          <button className="btn-white" onClick={clearCart} style={{ width: '100%', padding: '12px', color: '#0f172a' }}>
+            Savatni tozalash
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-)}
+  )}
     </div>
   );
 }

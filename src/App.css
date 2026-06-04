@@ -350,9 +350,10 @@ body {
   transition: 0.2s;
 }
 .btn-red:hover {
-  background: #660d05;
+  border: 1px solid #ff0000; /* Endi ishlaydi */
+  background: none;
   color: white;
-  border: none;
+  /* border: none;  <-- Buni o'chirib tashladik */
   border-radius: 10px;
   padding: 12px 24px;
   font-weight: bold;
@@ -376,14 +377,19 @@ body {
   transition: 0.3s;
 }
 .btn-white:hover {
-  background: #c8c8c8;
-  color: #ffffff;
-  border: 1px solid #000000;
+    background: #E12515;
+  color: white;
+  border: none;
   border-radius: 10px;
   padding: 12px 24px;
   font-weight: bold;
   font-size: 14px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: 0.2s;
 }
 
 /* 4-RASM: SIDEBAR SAVATCHA (MODAL DRAWER) */
@@ -529,7 +535,7 @@ body {
 
 .service-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 28px rgba(0, 0, 0, 0.53);
 }
 /* Konteyner chegaradan chiqib ketgan qismini yashirishi kerak */
 .service-img-wrapper {
@@ -621,8 +627,7 @@ body {
   cursor: pointer;
    padding: 10px;
     border-radius: 20px;
-    display: flex;
-    justify-content: center;
+
   transition:  0.5s ease;
 }
 
@@ -630,10 +635,9 @@ body {
   color: #ff5a00;
   border-radius: 0px 0px 1px b;
     border: 1px solid #000000;
-    padding: 10px;
+
     border-radius: 20px;
-    display: flex;
-    justify-content: center;
+
 }
 
 /* Qizil Buyurtma Banneri (CTA) */
@@ -925,3 +929,88 @@ body {
 .btn-with-arrow:active {
   transform: scale(0.98);
 } 
+/* 1. Asosiy Card holati va rasm wrapperi */
+.service-card {
+  overflow: hidden; /* Rasm kattalashganda carddan chiqib ketmasligi uchun */
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column; /* Ichidagi elementlarni ustma-ust tekislash */
+}
+
+.service-card-body {
+  display: flex;
+  flex-direction: column;
+  text-align: center; /* Matnlarni ham o'rtaga olish uchun (ixtiyoriy) */
+}
+
+.service-img-wrapper {
+  transition: transform 0.4s ease; /* Yumshoq kattalashish effekti */
+  background-size: cover;
+  background-position: center;
+}
+
+/* 2. Cardga mishka kelganda (Hover) rasmning kattalashishi */
+.service-card:hover .service-img-wrapper {
+  transform: scale(1.08); /* Rasmni salgina kattalashtiradi */
+}
+
+/* 3. "Batafsil" tugmasi uchun asosiy stillar */
+.service-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  padding: 8px 16px; 
+  border: 1px solid transparent; /* Oldindan joy band qilib turadi */
+  width: fit-content;
+  border-radius: 6px;
+  
+  /* Tugmani cardning aniq o'rtasiga olib kelish */
+  margin: 15px auto 0 auto; 
+}
+
+/* 4. Cardga mishka kelganda tugma yozuvi sabzi rang bo'lishi va strelka surilishi */
+.service-card:hover .service-link-btn {
+  color: #ff5a00; /* Sabzi rang */
+}
+
+.service-card:hover .service-link-btn svg {
+  transform: translateX(5px); /* Strelkani o'ngga 5px suradi */
+}
+
+/* Strelka orqaga qaytganda ham yumshoq qaytishi uchun */
+.service-link-btn svg {
+  transition: transform 0.3s ease;
+}
+
+/* 5. Aynan tugmaning o'ziga mishka borganda atrofida ramka paydo bo'lishi */
+.service-link-btn:hover {
+  border: 1px solid #ff5a00; /* Sabzi rangli ramka */
+  background-color: rgba(255, 90, 0, 0.05); /* Ochgina sabzi rang fon */
+}
+/* 1. Rasm turgan konteyner (Kattalashgan qismini kesib turadi) */
+.img-container {
+  position: relative; /* Badge joylashishi uchun kerak */
+  width: 100%;
+  height: 220px;       /* Loyihangizga qarab balandlikni moslang */
+  overflow: hidden;    /* ENG ASOSIYSI: rasm kattalashganda tashqariga chiqmaydi */
+}
+
+/* 2. Asosiy rasm holati */
+.food-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Yumshoq premium effekt */
+}
+
+/* 3. Butun kartochka ustiga sichqoncha borganda (Hover) rasmning kattalashishi */
+.food-card:hover .food-img {
+  transform: scale(1.12); /* 12% ga chiroyli kattalashadi */
+}
+
+/* Qo'shimcha: Agar rasm biroz qorayib chiroyli effekt berishini xohlasangiz */
+.food-card:hover .food-img {
+  filter: brightness(0.95);
+}
